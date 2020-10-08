@@ -1,0 +1,31 @@
+{
+  "name": "tcd_ds4",
+  "version": "1.0.0",
+  "description": "trabalho de conclusao da disciplina",
+  "main": "app.js",
+  "scripts": {
+    "test": "NODE_ENV=test&&mocha ./**/*.test.js",
+    "test-watch": "NODE_ENV=test&&mocha --watch ./**/*.test.js"
+  },
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/L0oD/TCD_DS4.git"
+  },
+  "author": "Leonardo D.",
+  "license": "ISC",
+  "bugs": {
+    "url": "https://github.com/L0oD/TCD_DS4/issues"
+  },
+  "homepage": "https://github.com/L0oD/TCD_DS4#readme",
+  "dependencies": {
+    "body-parser": "^1.19.0",
+    "cors": "^2.8.5",
+    "express": "^4.17.1",
+    "nodemon": "^2.0.4",
+    "sequelize": "5.21.5",
+    "sqlite3": "^5.0.0"
+  },
+  "devDependencies": {
+    "supertest": "^4.0.2"
+  }
+}
