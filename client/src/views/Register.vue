@@ -1,21 +1,38 @@
 <template>
   <div>
-    <main >
-      
+    <main class="cadastro no-padding">
       <section >
-      <h1>CADASTRO</h1>
-        <div >
-          <form  @submit.prevent="register">
-            <div >
+        <div class="principal_Cadastro" >
+        <h1 style="margin-left: 30px;">CADASTRO</h1>
+          <form  id="form_cad"  @submit.prevent="register">
+            <div style="margin-bottom: 5px;">
               <input
                 type="text"
-                name="username"
-                placeholder="Username"
-                v-model="credentials.username"
+                name="name"
+                placeholder="Nome"
+                v-model="credentials.name"
                 required
               />
             </div>
-            <div >
+            <div style="margin-bottom: 5px;">
+              <input
+                type="text"
+                name="email"
+                v-model="credentials.email"
+                placeholder="Email"
+                required
+              />
+            </div>
+            <div style="margin-bottom: 5px;">
+              <input
+                type="text"
+                name="username"
+                v-model="credentials.username"
+                placeholder="Login"
+                required
+              />
+            </div>
+            <div style="margin-bottom: 5px;">
               <input
                 type="password"
                 name="password"
@@ -25,34 +42,13 @@
               />
             </div>
             <div >
-              <input type="submit" value="Cadastrar" />
+              <input style="margin-left: 50px;margin-top: 10px;" type="submit" value="Cadastrar" />
             </div>
           </form>
         </div>
 
       </section>
-
-      <div class="card"><!----><div class="card-header text-left"><h5 class="title">Edit Profile</h5></div><div class="card-body"><div class="row"><div class="col-md-5 pr-md-1 text-left"><div class="form-group"><label class="control-label">
-        Company (disabled)
-      </label><!----><input aria-describedby="addon-right addon-left" placeholder="Company" disabled="disabled" class="form-control"><!----></div></div><div class="col-md-3 px-md-1 text-left"><div class="form-group"><label class="control-label">
-        Username
-      </label><!----><input aria-describedby="addon-right addon-left" placeholder="Username" class="form-control"><!----></div></div><div class="col-md-4 pl-md-1 text-left"><div class="form-group"><label class="control-label">
-        Email address
-      </label><!----><input aria-describedby="addon-right addon-left" type="email" placeholder="mike@email.com" class="form-control"><!----></div></div></div><div class="row"><div class="col-md-6 pr-md-1 text-left"><div class="form-group"><label class="control-label">
-        First Name
-      </label><!----><input aria-describedby="addon-right addon-left" placeholder="First Name" class="form-control"><!----></div></div><div class="col-md-6 pl-md-1 text-left"><div class="form-group"><label class="control-label">
-        Last Name
-      </label><!----><input aria-describedby="addon-right addon-left" placeholder="Last Name" class="form-control"><!----></div></div></div><div class="row"><div class="col-md-12 text-left"><div class="form-group"><label class="control-label">
-        Address
-      </label><!----><input aria-describedby="addon-right addon-left" placeholder="Home Address" class="form-control"><!----></div></div></div><div class="row"><div class="col-md-4 pr-md-1 text-left"><div class="form-group"><label class="control-label">
-        City
-      </label><!----><input aria-describedby="addon-right addon-left" placeholder="City" class="form-control"><!----></div></div><div class="col-md-4 px-md-1 text-left"><div class="form-group"><label class="control-label">
-        Country
-      </label><!----><input aria-describedby="addon-right addon-left" placeholder="Country" class="form-control"><!----></div></div><div class="col-md-4 pl-md-1 text-left"><div class="form-group"><label class="control-label">
-        Postal Code
-      </label><!----><input aria-describedby="addon-right addon-left" placeholder="ZIP Code" class="form-control"><!----></div></div></div><div class="row"><div class="col-md-8 text-left"><div class="form-group"><!----><!----><label>About Me</label><textarea rows="4" cols="80" placeholder="Here can be your description" class="form-control"></textarea><!----></div></div></div></div><!----><div class="card-footer text-left"><button type="button" class="btn btn-success" fill=""><!---->Save</button></div></div>
-    </main>
-
+      </main>
     <Footer />
   </div>
 </template>
@@ -65,6 +61,8 @@ export default {
   data() {
     return {
       credentials: {
+        name: "",
+        email: "",
         username: "",
         password: "",
       },
@@ -77,10 +75,41 @@ export default {
         await this.$store.dispatch("createAuth", credentials);
         this.$router.push("/login");
       } catch (e) {
-        console.log("Login Error on Login Page", e);
-        alert('Não foi possível realizar o login');
+        console.log("Não foi possivel realizar o cadastro!", e);
+        alert('Não foi possivel realizar o cadastro!');
       }
     }
   },
 };
 </script>
+
+<style>
+  .principal_Cadastro{
+  position: center;
+  align-items: center;
+  margin-left: 800px;
+  margin-right: 800px;
+  border: green;
+  border-style: dotted;
+  margin-top: 300px;
+  padding-bottom: 10px;
+  padding-left: 50px;
+  padding-right: 50px;
+}
+
+#form_cad{
+  position: center;
+  align-items: center;
+}
+
+.no-padding {
+  padding: 0;
+}
+
+.cadastro{
+  width: 100%;
+  align-items: center;
+  display:flex;
+  justify-items: center;
+}
+</style>

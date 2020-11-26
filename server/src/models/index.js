@@ -7,6 +7,7 @@ const sequelize = new Sequelize({
 });
 
 sequelize.User = sequelize.import('./User.js');
+sequelize.Produtos = sequelize.import('./Produtos.js');
 
 // Sincroniza as definições de models com o banco de dados
 sequelize.sync();
