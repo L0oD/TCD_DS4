@@ -1,8 +1,8 @@
 <template>
   <nav class="navigation">
-    <router-link to="/home">Home
+    <router-link class="menuLink" type="button"  to="/home">Home
     </router-link>
-    <router-link style="margin-left: 15px;" to="/produto">Produto
+    <router-link class="menuLink" style="margin-left: 15px;" to="/produto">Produto
     </router-link>
   </nav>
 </template>
@@ -23,5 +23,7 @@ export default {
     align-items:center;
     box-sizing: border-box;
 }
+.menuLink {  text-decoration: none;
+    color:green}
 
 </style>

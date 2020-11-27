@@ -3,111 +3,289 @@
     <Header />
     <main>
       <section>
-        <h1>Produtos</h1>
-        <div class="principal_Cadastro">
-          <h1 style="margin-left: 30px;">CADASTRO</h1>
-          <form id="form_cad" @submit.prevent="cadprod">
+        <div style="background-color: rgb(124, 185, 124);">
+          <h1>Produtos</h1>
+        </div>
+        <div style="border: green;border-style: solid;">
+          <h3>Adicionar:</h3>
+          <form style="display: flex;justify-items: baseline;justify-content: space-between;margin-bottom: 45px;"
+            @submit.prevent="cadprod">
             <div style="margin-bottom: 5px;">
-              <input
-                type="text"
-                name="codigo"
-                v-model="produto.codigo"
-                placeholder="Código"
-                required
-              />
+              <label for="codigo">Código:</label>
+              <input type="text" name="codigo" v-model="produto.codigo" placeholder="Código" required />
             </div>
             <div style="margin-bottom: 5px;">
-              <input
-                type="text"
-                name="name"
-                placeholder="Nome"
-                v-model="produto.name"
-                required
-              />
+              <label for="name">Nome Produto:</label>
+              <input type="text" name="name" placeholder="Nome" v-model="produto.name" required />
             </div>
             <div style="margin-bottom: 5px;">
-              <input
-                type="number"
-                name="Quantidade"
-                v-model="produto.qtde"
-                placeholder="Quantidade"
-                required
-              />
+              <label for="Quantidade">Quantidade:</label>
+              <input type="number" name="Quantidade" v-model="produto.qtde" placeholder="Quantidade" required />
             </div>
             <div style="margin-bottom: 5px;">
-              <input
-                type="number"
-                name="indice"
-                v-model="produto.indice"
-                placeholder="Indice"
-                required
-              />
+              <label for="indice">Valor Un:</label>
+              <input type="number" name="indice" v-model="produto.indice" placeholder="Indice" required />
             </div>
-
             <div>
-              <input
-                style="margin-left: 50px;margin-top: 10px;"
-                type="submit"
-                value="Adicionar"
-              />
+              <input style="background-color:  rgb(124, 185, 124);" type="submit" value="Adicionar" />
             </div>
           </form>
         </div>
-        <ul id="v-for-object" class="demo">
-          <li v-for="prod in produtos" v-bind:key="prod.id">
-            {{ prod.name }}
-          </li>
-        </ul>
+        <div id="filtroDiv">
+          <label for="filtro">Filtro:</label>
+          <input id="filtro" name="filtro" placeholder="Nome do Produto" type="text">
+          <button style="margin-left: 15px;" v-on:click.once="filter()">Filtrar</button>
+        </div>
 
-        <table style="width:100%">
-          <tr v-for="prod in produtos" v-bind:key="prod.id">
-            <th>{{ prod.name }}</th>
-          </tr>
-          <tr>
-            <th>oi</th>
-          </tr>
-        </table>
+        <div class="table-wrapper" name="filter">
+          <table class="fl-table">
+            <tr>
+              <th>Codigo</th>
+              <th>Nome</th>
+              <th>Quantidade</th>
+              <th>Valor Un.</th>
+              <th>Valor Total</th>
+              <th>Opações</th>
+            </tr>
+            <tr v-for="prod in produtos" v-bind:key="prod.id">
+              <th>{{ prod.codigo }}</th>
+              <th>{{ prod.name }}</th>
+              <th>{{ prod.qtde }}</th>
+              <th>{{ prod.indice }}</th>
+              <th>{{ prod.valor_total }}</th>
+              <th><a style="background-color: indianred;" type="button"
+                  v-on:click.once="delprod(prod.codigo)">Deletar</a></th>
+            </tr>
+          </table>
+        </div>
+
       </section>
     </main>
   </div>
 </template>
 
 <script>
-import Header from "../components/Header";
-import axios from "axios";
-export default {
-  components: {
-    Header,
-  },
-  data() {
-    return {
-      produto: {
-        codigo: "",
-        name: "",
-        qtde: 0,
-        indice: 0,
-        valor_total: 0,
+  import Header from "../components/Header";
+  import axios from "axios";
+  export default {
+    components: {
+      Header,
+    },
+    data() {
+      return {
+        produto: {
+          codigo: "",
+          name: "",
+          qtde: 0,
+          indice: 0,
+          valor_total: 0,
+        },
+        produtos: [],
+      };
+    },
+    created() {
+      this.loadProds();
+    },
+    methods: {
+      loadProds() {
+        axios.get("/prods/find").then((response) => {
+          console.log("response", response);
+          this.produtos = response.data;
+        });
       },
-      produtos: []
-    };
-  },
-  created() {
-    axios.get("/prods/find").then((response) => {
-      console.log("response", response);
-      this.produtos = response.data;
-    });
-  },
-  methods: {
-    async cadprod() {
-      const produto = this.produto;
-      try {
-        await this.$store.dispatch("createProd", produto);
-        this.$router.push("/produto");
-      } catch (e) {
-        console.log("Não foi possivel realizar o cadastro!", e);
-        alert("Não foi possivel realizar o cadastro!");
+      filter() {
+        var name = document.getElementById("filtro").value;
+        console.log(name)
+          axios.get("/prods/filter/" + name).then((response) => {
+            console.log("response", response);
+            this.produtos = response.data;
+          });
+      },
+      async cadprod() {
+        var produto = this.produto;
+
+        try {
+          produto.valor_total = (produto.qtde * produto.indice)
+          await this.$store.dispatch("createProd", produto);
+          this.loadProds();
+        } catch (e) {
+          console.log("Não foi possivel realizar o cadastro!", e);
+          alert("Não foi possivel realizar o cadastro!");
+        }
+      },
+      async delprod(produtoid) {
+        try {
+          await this.$store.dispatch("deleteProd", produtoid);
+          this.loadProds();
+        } catch (e) {
+          this.loadProds();
+        }
       }
     },
-  },
-};
+  };
 </script>
+
+<style>
+  * {
+    box-sizing: border-box;
+    -webkit-box-sizing: border-box;
+    -moz-box-sizing: border-box;
+  }
+
+  #filtroDiv {
+    margin-bottom: 70px;
+    background-color: lemonchiffon;
+    margin-top: 15px;
+  }
+
+  form {
+    display: flex;
+    flex-wrap: wrap;
+  }
+
+  input {
+    border: none;
+    background: hsl(0 0% 93%);
+    border-radius: .25rem;
+    padding: .75rem 1rem;
+  }
+
+  h2 {
+    text-align: center;
+    font-size: 18px;
+    text-transform: uppercase;
+    letter-spacing: 1px;
+    color: white;
+    padding: 30px 0;
+  }
+
+  /* Table Styles */
+
+  .table-wrapper {
+    margin: 10px 70px 70px;
+    box-shadow: 0px 35px 50px rgba(0, 0, 0, 0.2);
+  }
+
+  .fl-table {
+    border-radius: 5px;
+    font-size: 12px;
+    font-weight: normal;
+    border: none;
+    border-collapse: collapse;
+    width: 100%;
+    max-width: 100%;
+    white-space: nowrap;
+    background-color: white;
+  }
+
+  .fl-table td,
+  .fl-table th {
+    text-align: center;
+    padding: 8px;
+  }
+
+  .fl-table td {
+    border-right: 1px solid #f8f8f8;
+    font-size: 12px;
+  }
+
+  .fl-table thead th {
+    color: #ffffff;
+    background: #4FC3A1;
+  }
+
+
+  .fl-table thead th:nth-child(odd) {
+    color: #ffffff;
+    background: #324960;
+  }
+
+  .fl-table tr:nth-child(even) {
+    background: #F8F8F8;
+  }
+
+  /* Responsive */
+
+  @media (max-width: 767px) {
+
+    .fl-table {
+      display: block;
+      width: 100%;
+    }
+
+    .table-wrapper:before {
+      content: "Scroll horizontally >";
+      display: block;
+      text-align: right;
+      font-size: 11px;
+      color: white;
+      padding: 0 0 10px;
+
+    }
+
+    .fl-table thead,
+    .fl-table tbody,
+    .fl-table thead th {
+      display: block;
+    }
+
+    .fl-table thead th:last-child {
+      border-bottom: none;
+    }
+
+    .fl-table thead {
+      float: left;
+    }
+
+    .fl-table tbody {
+      width: auto;
+      position: relative;
+      overflow-x: auto;
+    }
+
+    .fl-table td,
+    .fl-table th {
+      padding: 20px .625em .625em .625em;
+      height: 60px;
+      vertical-align: middle;
+      box-sizing: border-box;
+      overflow-x: hidden;
+      overflow-y: auto;
+      width: 120px;
+      font-size: 13px;
+      text-overflow: ellipsis;
+    }
+
+    .fl-table thead th {
+      text-align: left;
+      border-bottom: 1px solid #f7f7f9;
+    }
+
+    .fl-table tbody tr {
+      display: table-cell;
+    }
+
+    .fl-table tbody tr:nth-child(odd) {
+      background: none;
+    }
+
+    .fl-table tr:nth-child(even) {
+      background: transparent;
+    }
+
+    .fl-table tr td:nth-child(odd) {
+      background: #F8F8F8;
+      border-right: 1px solid #E6E4E4;
+    }
+
+    .fl-table tr td:nth-child(even) {
+      border-right: 1px solid #E6E4E4;
+    }
+
+    .fl-table tbody td {
+      display: block;
+      text-align: center;
+    }
+
+  }
+</style>

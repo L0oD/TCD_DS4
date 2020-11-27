@@ -4,7 +4,7 @@
       <section>
         <div class="principal_login">
           <h1 style="margin-left: 110px;">LOGIN</h1>
-          <form @submit.prevent="register" id="form_login">
+          <form @submit.prevent="login" id="form_login">
             <div>
               <input style="margin-left: 50px;" type="text" name="username" placeholder="login" v-model="credentials.username" required />
             </div>

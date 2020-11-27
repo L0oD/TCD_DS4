@@ -4,6 +4,9 @@ module.exports = (sequelize, DataType) => sequelize.define('user', {
       allowNull: true,
       primaryKey: true
     },
+    username: {
+      type: DataType.STRING
+    },
     name: {
       type: DataType.STRING
     },
